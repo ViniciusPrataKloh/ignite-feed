@@ -1,8 +1,9 @@
 import { Header } from './components/header/Header';
+import { Sidebar } from './components/sidebar/Sidebar';
+import { Post } from './components/post/Post';
 
 import './global.css';
 import styles from './App.module.css';
-import { Sidebar } from './components/sidebar/Sidebar';
 
 export function App() {
 
@@ -11,14 +12,11 @@ export function App() {
       <Header />
 
       <div className={styles.wrapper}>
-
         <Sidebar />
-
         <main>
-          Author: Vinicius <br />
-          Content: Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quam maiores voluptas corporis distinctio iste ab numquam amet quod minus eius soluta, ipsa minima in quos, pariatur quidem facilis fugiat voluptatibus?.
+          <Post />
+          <Post />
         </main>
-
       </div>
 
     </div>
