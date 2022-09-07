@@ -9,8 +9,11 @@ import styles from './Post.module.css';
 export function Post({ author, publishedAt, content }) {
 
     const [comments, setComments] = useState([
-        "Muito bacana!!!"
+        { "id": "1", "comment": "Muito bacana!!!" },
+        { "id": "2", "comment": "Fera demaaaais!!!" }
     ]);
+
+    let keyContent = 0;
 
     const publishedDateFormatted = format(publishedAt, "d 'de' LLLL 'às' HH:mm'h'", {
         locale: ptBR
@@ -21,12 +24,17 @@ export function Post({ author, publishedAt, content }) {
         addSuffix: true
     });
 
-    const newCommentText = event.target.textarea
+    // const newCommentText = (handleFormSubmit(e)) => {
 
-    function handleCreateNewComment() {
+    // }
+
+    function handleCreateNewComment(e) {
         event.preventDefault();
-
-        setComments([...comments, newCommentText]);
+        console.log(e.target.inputComment.value);
+        setComments([...comments, {
+            "id": comments.length + 1,
+            "comment": e.target.inputComment.value
+        }]);
     }
 
     return (
@@ -46,18 +54,20 @@ export function Post({ author, publishedAt, content }) {
                 <time
                     title={publishedDateFormatted}
                     dateTime={publishedAt.toISOString()}
-                >{publishedDateRelativeToNow}</time>
+                >{publishedDateRelativeToNow}
+                </time>
             </header>
 
             <div className={styles.content}>
                 {content.map(line => {
+                    keyContent++;
                     if (line.type === 'paragraph') {
                         return (
-                            <p>{line.content}</p>
+                            <p key={keyContent}>{line.content}</p>
                         );
                     } else {
                         return (
-                            <a href='#'>{line.content}</a>
+                            <a key={keyContent} href='#'>{line.content}</a>
                         );
                     }
                 })}
@@ -73,12 +83,14 @@ export function Post({ author, publishedAt, content }) {
                 </footer>
             </form>
 
-            {comments.map(comment => {
-                return (
-                    <Comment content={comment} />
-                );
-            })}
+            {
+                comments.map(comment => {
+                    return (
+                        <Comment key={comment.id} content={comment.comment} />
+                    );
+                })
+            }
 
-        </article>
+        </article >
     );
 }
