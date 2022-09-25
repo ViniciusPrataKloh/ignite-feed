@@ -1,6 +1,6 @@
 import { format, formatDistanceToNow } from 'date-fns';
 import ptBR from 'date-fns/locale/pt-BR';
-import { useState } from 'react';
+import { useState, FormEvent } from 'react';
 import { Avatar } from '../avatar/Avatar';
 import { Comment } from '../comment/Comment';
 import styles from './Post.module.css';
@@ -8,12 +8,8 @@ import styles from './Post.module.css';
 
 export function Post({ author, publishedAt, content }) {
 
-    const [comments, setComments] = useState([
-        { "id": "1", "comment": "Muito bacana!!!" },
-        { "id": "2", "comment": "Fera demaaaais!!!" }
-    ]);
-
-    let keyContent = 0;
+    const [comments, setComments] = useState(["Muito bacana!!!"]);
+    const [newCommentText, setNewCommentText] = useState('');
 
     const publishedDateFormatted = format(publishedAt, "d 'de' LLLL 'às' HH:mm'h'", {
         locale: ptBR
@@ -24,17 +20,23 @@ export function Post({ author, publishedAt, content }) {
         addSuffix: true
     });
 
-    // const newCommentText = (handleFormSubmit(e)) => {
-
-    // }
-
     function handleCreateNewComment(e) {
-        event.preventDefault();
-        console.log(e.target.inputComment.value);
-        setComments([...comments, {
-            "id": comments.length + 1,
-            "comment": e.target.inputComment.value
-        }]);
+        e.preventDefault();
+
+        setComments([...comments, newCommentText]);
+
+        setNewCommentText('');
+    }
+
+    function handleNewCommentChange(e) {
+        setNewCommentText(e.target.value);
+    }
+
+    function deleteComment(commentToDelete) {
+        const commentsAfterDeleteOne = comments.filter(comment => {
+            return comment != commentToDelete;
+        });
+        setComments(commentsAfterDeleteOne);
     }
 
     return (
@@ -60,14 +62,13 @@ export function Post({ author, publishedAt, content }) {
 
             <div className={styles.content}>
                 {content.map(line => {
-                    keyContent++;
                     if (line.type === 'paragraph') {
                         return (
-                            <p key={keyContent}>{line.content}</p>
+                            <p key={line.content}>{line.content}</p>
                         );
                     } else {
                         return (
-                            <a key={keyContent} href='#'>{line.content}</a>
+                            <a key={line.content} href='#'>{line.content}</a>
                         );
                     }
                 })}
@@ -76,7 +77,12 @@ export function Post({ author, publishedAt, content }) {
             <form onSubmit={handleCreateNewComment} className={styles.commentForm}>
                 <strong className={styles.commentFormStrong}>Deixe seu feedback</strong>
 
-                <textarea name="inputComment" placeholder="Deixe um comentário" />
+                <textarea
+                    name="inputComment"
+                    placeholder="Deixe um comentário"
+                    value={newCommentText}
+                    onChange={handleNewCommentChange}
+                />
 
                 <footer className={styles.commentFormFooter}>
                     <button type="submit">Publicar</button>
@@ -86,7 +92,11 @@ export function Post({ author, publishedAt, content }) {
             {
                 comments.map(comment => {
                     return (
-                        <Comment key={comment.id} content={comment.comment} />
+                        <Comment
+                            key={comment}
+                            content={comment}
+                            onDeleteComment={deleteComment}
+                        />
                     );
                 })
             }
