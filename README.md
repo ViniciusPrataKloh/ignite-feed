@@ -3,7 +3,7 @@
 </h1>
 
 <p align="center">
-  <img src="./presentation-ignite-feed.png" width="800">
+  <img src="./presentation.png" width="800">
 </p>
 
 <br>
