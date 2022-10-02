@@ -1,5 +1,5 @@
 <h1 align="center">
-  toDo 
+  Ignite Feed 
 </h1>
 
 <p align="center">
